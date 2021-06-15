@@ -11,15 +11,25 @@ let persons = [
 ];
 
 app.get("/info", (_, response) => {
-  const html = `<div><p>Phonebook has info for ${persons.length} people</p><p>${
-    new Date().toUTCString()
-  }</p></div>`;
+  const html = `<div><p>Phonebook has info for ${
+    persons.length
+  } people</p><p>${new Date().toUTCString()}</p></div>`;
 
   response.send(html);
 });
 
 app.get("/api/persons", (_, response) => {
   response.json(persons);
+});
+
+app.get("/api/persons/:id", (request, response) => {
+  const idToSearch = Number(request.params.id);
+  console.log(idToSearch);
+  const person = persons.find((person) => person.id === idToSearch);
+  if (!person) {
+    response.sendStatus(404).end();
+  }
+  response.json(person);
 });
 
 const PORT = 3001;
