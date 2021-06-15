@@ -22,6 +22,14 @@ app.get("/api/persons", (_, response) => {
   response.json(persons);
 });
 
+app.post("/api/persons", (request, response) => {
+  const person = request.body;
+  person.id = Math.floor(Math.random() * 9999999);
+  persons = persons.concat(person);
+  response.json(persons);
+  response.sendStatus(201);
+});
+
 app.get("/api/persons/:id", (request, response) => {
   const idToSearch = Number(request.params.id);
   const person = persons.find((person) => person.id === idToSearch);
