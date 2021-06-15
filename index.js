@@ -10,6 +10,14 @@ let persons = [
   { id: 3, name: "Mary Poppendick", number: "040-901234" },
 ];
 
+app.get("/info", (_, response) => {
+  const html = `<div><p>Phonebook has info for ${persons.length} people</p><p>${
+    new Date().toUTCString()
+  }</p></div>`;
+
+  response.send(html);
+});
+
 app.get("/api/persons", (_, response) => {
   response.json(persons);
 });
