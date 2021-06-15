@@ -24,6 +24,20 @@ app.get("/api/persons", (_, response) => {
 
 app.post("/api/persons", (request, response) => {
   const person = request.body;
+  if (person.name === undefined || person.number === undefined) {
+    response
+      .json({ error: "Request hasn't name or number" })
+      .sendStatus(400)
+      .end();
+  }
+
+  const isNameAlreadyAdded = (personName) =>
+    persons.some((person) => person.name === personName);
+
+  if (isNameAlreadyAdded(person.name)) {
+    response.json({ error: "Name must be unique" }).sendStatus(400).end();
+  }
+
   person.id = Math.floor(Math.random() * 9999999);
   persons = persons.concat(person);
   response.json(persons);
