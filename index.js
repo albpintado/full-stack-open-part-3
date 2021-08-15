@@ -11,6 +11,26 @@ app.use(cors());
 
 app.use(express.static("build"));
 
+const mongoose = require("mongoose");
+
+const password = "Ntp1uzm3HjArkwOF";
+
+const url = `mongodb+srv://apl:${password}@cluster0.eb7p9.mongodb.net/person-app?retryWrites=true&w=majority`;
+
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
+
+const entrySchema = new mongoose.Schema({
+  name: String,
+  number: String,
+});
+
+const Entry = mongoose.model("Entry", entrySchema);
+
 let persons = [
   { id: 1, name: "Arto Hellas", number: "040-123456" },
   { id: 2, name: "Ada Lovelace", number: "040-789012" },
@@ -27,7 +47,9 @@ app.get("/info", (_, response) => {
 });
 
 app.get("/api/persons", (_, response) => {
-  response.json(persons);
+  Entry.find({}).then((entries) => {
+    response.json(entries);
+  });
 });
 
 app.post("/api/persons", (request, response) => {
