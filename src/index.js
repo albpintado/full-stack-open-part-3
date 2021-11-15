@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -13,7 +14,7 @@ app.use(express.static("build"));
 
 const mongoose = require("mongoose");
 
-const password = "Ntp1uzm3HjArkwOF";
+const password = process.env.MONGO_PASSWORD;
 
 const url = `mongodb+srv://apl:${password}@cluster0.eb7p9.mongodb.net/person-app?retryWrites=true&w=majority`;
 
@@ -30,6 +31,14 @@ const entrySchema = new mongoose.Schema({
 });
 
 const Entry = mongoose.model("Entry", entrySchema);
+
+entrySchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
 let persons = [
   { id: 1, name: "Arto Hellas", number: "040-123456" },
