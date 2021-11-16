@@ -43,30 +43,12 @@ app.post("/api/persons", (request, response) => {
     return response.status(400).json({ error: 'content missing' })
   }
 
-
-  // if (body.name === "" || body.number === "") {
-  //   response
-  //     .json({ error: "Content missing" })
-  //     .status(400)
-  //     .end();
-  // }
-
   const person = new Entry({
     name: body.name,
     number: body.number,
   })
 
   person.save().then(savedNote => response.json(savedNote))
-
-  const isNameAlreadyAdded = (personName) =>
-    persons.some((person) => person.name === personName);
-
-  if (isNameAlreadyAdded(person.name)) {
-    response.json({ error: "Name must be unique" }).sendStatus(400).end();
-  }
-
-  // person.id = Math.floor(Math.random() * 9999999);
-  // persons = persons.concat(person);
 
   response.sendStatus(201);
 });
@@ -83,7 +65,7 @@ app.get("/api/persons/:id", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
   const idToSearch = Number(request.params.id);
   persons = persons.filter((person) => person.id !== idToSearch);
-  response.sendStatus(204);
+  response.json(person).status(204);
 });
 
 const PORT = process.env.PORT;
