@@ -8,7 +8,7 @@ mongoose.connect(url, {
   useFindAndModify: false,
   useCreateIndex: true,
 }).then(result => {
-  console.log("Connected to DB")
+  console.log("Connected to DB!")
 }).catch((error) => {
   console.log("Error connecting to DB: ", error.message)
 });
