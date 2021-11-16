@@ -37,23 +37,37 @@ app.get("/api/persons", (_, response) => {
 });
 
 app.post("/api/persons", (request, response) => {
-  const person = request.body;
-  if (person.name === undefined || person.number === undefined) {
-    response
-      .json({ error: "Request hasn't name or number" })
-      .sendStatus(400)
-      .end();
+  const body = request.body;
+
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
 
-  const isNameAlreadyAdded = (personName) =>
-    persons.some((person) => person.name === personName);
 
-  if (isNameAlreadyAdded(person.name)) {
-    response.json({ error: "Name must be unique" }).sendStatus(400).end();
-  }
+  // if (body.name === "" || body.number === "") {
+  //   response
+  //     .json({ error: "Content missing" })
+  //     .status(400)
+  //     .end();
+  // }
 
-  person.id = Math.floor(Math.random() * 9999999);
-  persons = persons.concat(person);
+  const person = new Entry({
+    name: body.name,
+    number: body.number,
+  })
+
+  person.save().then(savedNote => response.json(savedNote))
+
+  // const isNameAlreadyAdded = (personName) =>
+  //   persons.some((person) => person.name === personName);
+
+  // if (isNameAlreadyAdded(person.name)) {
+  //   response.json({ error: "Name must be unique" }).sendStatus(400).end();
+  // }
+
+  // person.id = Math.floor(Math.random() * 9999999);
+  // persons = persons.concat(person);
+
   response.sendStatus(201);
 });
 
