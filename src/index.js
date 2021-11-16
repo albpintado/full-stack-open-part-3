@@ -40,7 +40,7 @@ app.post("/api/persons", (request, response) => {
   // Step2, exercise 3.14 made in another commit. Here it is
   const body = request.body;
 
-  if (body.content === undefined) {
+  if (body.name === undefined || body.number === undefined) {
     return response.status(400).json({ error: 'content missing' })
   }
 
