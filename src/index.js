@@ -37,6 +37,7 @@ app.get("/api/persons", (_, response) => {
 });
 
 app.post("/api/persons", (request, response) => {
+  // Step2, exercise 3.14 made in another commit. Here it is
   const body = request.body;
 
   if (body.content === undefined) {
