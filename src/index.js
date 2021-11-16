@@ -37,30 +37,27 @@ app.get("/api/persons", (_, response) => {
 });
 
 app.post("/api/persons", (request, response) => {
-  // Step2, exercise 3.14 made in another commit. Here it is
   const body = request.body;
-
-  if (body.name === undefined || body.number === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  }
 
   const person = new Entry({
     name: body.name,
     number: body.number,
   })
 
-  person.save().then(savedNote => response.json(savedNote))
-
-  response.sendStatus(201);
+  return body.name === "" || body.number === ""
+  ? response.status(400).json({ error: 'content missing' })
+  : person.save().then(savedNote => {
+    response
+    .sendStatus(201)
+    .json(savedNote)
+    .end()})
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = Entry.findById(id)
-  if (!person) {
-    response.sendStatus(404).end();
-  }
-  response.json(person);
+  const id = request.params.id;
+  Entry.findById(id).then(person => {
+    response.json(person)
+  })
 });
 
 app.delete("/api/persons/:id", (request, response) => {
