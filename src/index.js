@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 app.use(express.json());
+const Entry = require("./entry");
 
 const morgan = require("morgan");
 morgan.token("body", (req, _) => JSON.stringify(req.body));
@@ -12,33 +13,6 @@ app.use(cors());
 
 app.use(express.static("build"));
 
-const mongoose = require("mongoose");
-
-const password = process.env.MONGO_PASSWORD;
-
-const url = `mongodb+srv://apl:${password}@cluster0.eb7p9.mongodb.net/person-app?retryWrites=true&w=majority`;
-
-mongoose.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
-
-const entrySchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
-
-const Entry = mongoose.model("Entry", entrySchema);
-
-entrySchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
 
 let persons = [
   { id: 1, name: "Arto Hellas", number: "040-123456" },
@@ -97,5 +71,5 @@ app.delete("/api/persons/:id", (request, response) => {
   response.sendStatus(204);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
