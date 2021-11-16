@@ -58,12 +58,12 @@ app.post("/api/persons", (request, response) => {
 
   person.save().then(savedNote => response.json(savedNote))
 
-  // const isNameAlreadyAdded = (personName) =>
-  //   persons.some((person) => person.name === personName);
+  const isNameAlreadyAdded = (personName) =>
+    persons.some((person) => person.name === personName);
 
-  // if (isNameAlreadyAdded(person.name)) {
-  //   response.json({ error: "Name must be unique" }).sendStatus(400).end();
-  // }
+  if (isNameAlreadyAdded(person.name)) {
+    response.json({ error: "Name must be unique" }).sendStatus(400).end();
+  }
 
   // person.id = Math.floor(Math.random() * 9999999);
   // persons = persons.concat(person);
