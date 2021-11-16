@@ -32,7 +32,7 @@ app.get("/info", (_, response) => {
 app.get("/api/persons", (_, response) => {
   Entry.find({}).then((entries) => {
     response.json(entries);
-  });
+  }).catch((error) => console.log("Error: ", error.message));
 });
 
 app.post("/api/persons", (request, response) => {
