@@ -54,8 +54,8 @@ app.post("/api/persons", (request, response) => {
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const idToSearch = Number(request.params.id);
-  const person = persons.find((person) => person.id === idToSearch);
+  const id = Number(request.params.id);
+  const person = Entry.findById(id)
   if (!person) {
     response.sendStatus(404).end();
   }
@@ -65,7 +65,7 @@ app.get("/api/persons/:id", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
   const idToSearch = Number(request.params.id);
   persons = persons.filter((person) => person.id !== idToSearch);
-  response.json(person).status(204);
+  response.json(204);
 });
 
 const PORT = process.env.PORT;
