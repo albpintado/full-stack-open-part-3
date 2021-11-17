@@ -60,6 +60,17 @@ app.post("/api/persons", (request, response) => {
     .end()})
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  const body = request.body;
+  const newEntry = { name: body.name, number: body.number }
+  Entry.findByIdAndUpdate(id, newEntry, { new: true })
+    .then(person => {
+      response.json(person)
+    })
+    .catch(error => next(error))
+});
+
 app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   Entry.findById(id)
