@@ -13,6 +13,13 @@ app.use(cors());
 
 app.use(express.static("build"));
 
+const errorHandler = (error, request, response, next) => {
+  console.log(error);
+  if (error.name === "CastError") {
+    response.status(400).send({ error: 'Invalid ID format.' })
+  }
+  next(error);
+}
 
 let persons = [
   { id: 1, name: "Arto Hellas", number: "040-123456" },
@@ -53,22 +60,23 @@ app.post("/api/persons", (request, response) => {
     .end()})
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  Entry.findById(id).then(person => {
-    response.json(person)
-  })
+  Entry.findById(id)
+    .then(person => {
+      response.json(person)
+    })
+    .catch(error => next(error))
 });
 
 app.delete("/api/persons/:id", (request, response) => {
   const { id } = request.params;
   Entry.findByIdAndRemove(id)
     .then(result => response.status(204).end())
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'Invalid ID format.' })
-  });
+    .catch(error => next(error));
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
