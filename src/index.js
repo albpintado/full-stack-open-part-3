@@ -61,9 +61,13 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 app.delete("/api/persons/:id", (request, response) => {
-  const idToSearch = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== idToSearch);
-  response.json(204);
+  const { id } = request.params;
+  Entry.findByIdAndRemove(id)
+    .then(result => response.status(204).end())
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'Invalid ID format.' })
+  });
 });
 
 const PORT = process.env.PORT;
