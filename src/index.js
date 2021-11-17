@@ -21,19 +21,16 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 }
 
-let persons = [
-  { id: 1, name: "Arto Hellas", number: "040-123456" },
-  { id: 2, name: "Ada Lovelace", number: "040-789012" },
-  { id: 3, name: "Dan Abramov", number: "040-345678" },
-  { id: 4, name: "Mary Poppendick", number: "040-901234" },
-];
-
 app.get("/info", (_, response) => {
-  const html = `<div><p>Phonebook has info for ${
-    persons.length
-  } people</p><p>${new Date().toUTCString()}</p></div>`;
-
-  response.send(html);
+    Entry
+      .find({})
+      .then((persons) => {
+        const html = `<div><p>Phonebook has info for ${
+          persons.length
+        } people</p><p>${new Date().toUTCString()}</p></div>`;
+        response.send(html);
+      })
+      .catch((error) => console.log("Error: ", error.message))
 });
 
 app.get("/api/persons", (_, response) => {
