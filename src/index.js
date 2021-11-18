@@ -48,13 +48,14 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   })
 
-  return body.name === "" || body.number === ""
-  ? response.status(400).json({ error: 'content missing' })
-  : person.save().then(savedNote => {
-    response
-    .sendStatus(201)
-    .json(savedNote)
-    .end()})
+  person
+    .save()
+    .then(savedNote => {
+      response
+      .sendStatus(201)
+      .json(savedNote)
+      .end()})
+    .catch(error => response.status(400).json({ error: 'Name must be unique' }))
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
@@ -77,7 +78,7 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch(error => next(error))
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   const { id } = request.params;
   Entry.findByIdAndRemove(id)
     .then(result => response.status(204).end())
