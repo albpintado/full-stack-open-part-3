@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -16,21 +16,21 @@ app.use(express.static("build"));
 const errorHandler = (error, request, response, next) => {
   console.log(error);
   if (error.name === "CastError") {
-    response.status(400).send({ error: 'Invalid ID format.' })
+    response.status(400).send({ error: "Invalid ID format." });
   }
   next(error);
-}
+};
 
 app.get("/info", (_, response) => {
-    Entry
-      .find({})
-      .then((persons) => {
-        const html = `<div><p>Phonebook has info for ${
-          persons.length
-        } people</p><p>${new Date().toUTCString()}</p></div>`;
-        response.send(html);
-      })
-      .catch((error) => console.log("Error: ", error.message))
+  Entry
+    .find({})
+    .then((persons) => {
+      const html = `<div><p>Phonebook has info for ${
+        persons.length
+      } people</p><p>${new Date().toUTCString()}</p></div>`;
+      response.send(html);
+    })
+    .catch((error) => console.log("Error: ", error.message));
 });
 
 app.get("/api/persons", (_, response) => {
@@ -46,36 +46,37 @@ app.post("/api/persons", (request, response) => {
   const person = new Entry({
     name: body.name,
     number: body.number,
-  })
+  });
 
   person
     .save()
     .then(savedNote => {
       response
-      .sendStatus(201)
-      .json(savedNote)
-      .end()})
-    .catch(error => response.status(400).json({ error: 'Name must be unique' }))
+        .sendStatus(201)
+        .json(savedNote)
+        .end();
+    })
+    .catch(error => response.status(400).json({ error: "Name must be unique" }));
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   const body = request.body;
-  const newEntry = { name: body.name, number: body.number }
+  const newEntry = { name: body.name, number: body.number };
   Entry.findByIdAndUpdate(id, newEntry, { new: true })
     .then(person => {
-      response.json(person)
+      response.json(person);
     })
-    .catch(error => next(error))
+    .catch(error => next(error));
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   Entry.findById(id)
     .then(person => {
-      response.json(person)
+      response.json(person);
     })
-    .catch(error => next(error))
+    .catch(error => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response, next) => {

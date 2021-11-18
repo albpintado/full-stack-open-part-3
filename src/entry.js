@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
-var uniqueValidator = require('mongoose-unique-validator');
+var uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGO_URL;
 
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then(result => {
-  console.log("Connected to DB!")
+}).then(() => {
+  console.log("Connected to DB!");
 }).catch((error) => {
-  console.log("Error connecting to DB: ", error.message)
+  console.log("Error connecting to DB: ", error.message);
 });
 
 const entrySchema = new mongoose.Schema({
@@ -36,4 +36,4 @@ entrySchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model('Entry', entrySchema);
+module.exports = mongoose.model("Entry", entrySchema);
